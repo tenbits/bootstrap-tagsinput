@@ -59,9 +59,15 @@
         return new this.FreeObject(itemText);
       
       var prop = this.options.itemText;
-      return this.allowedItems.filter(function(x){
-          return x[prop] === itemText;
-      })[0];
+      
+
+      function get(arr) {
+        return arr.filter(function(x){
+            return x[prop] === itemText;
+        })[0];
+      }
+
+      return get(this.allowedItems) || get(this.itemsArray);
     },
 
     _getItemByValue: function(itemValue){
@@ -69,9 +75,12 @@
         return this.FreeObject(itemValue);
       
       var prop = this.options.itemValue;
-      return this.allowedItems.filter(function(x){
-          return x[prop] === itemValue;
-      })[0];
+      function get(arr) {
+        return arr.filter(function(x){
+            return x[prop] === itemValue;
+        })[0];
+      }
+      return get(this.allowedItems) || get(this.itemsArray);
     },
 
     _getClass: function(item){
@@ -135,6 +144,10 @@
         );
       }
     },
+    
+    _clear: function(){
+      this.$input[0].value = '';
+    },
 
     _emitChange: function(type, item){
       this.$element.trigger('change');
@@ -181,6 +194,7 @@
       var item = this._getItemByValue(itemValue);
       this._add(item);
       this._emitChange('Added', item);
+      this._clear();
     },
 
     /**
